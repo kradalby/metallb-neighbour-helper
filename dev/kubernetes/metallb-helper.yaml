@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  namespace: metallb-system
+  name: metallb-neighbour-helper
+  labels:
+    app: metallb
+    component: neighbour-helper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metallb
+      component: neighbour-helper
+  template:
+    metadata:
+      labels:
+        app: metallb
+        component: neighbour-helper
+    spec:
+      serviceAccountName: speaker
+      terminationGracePeriodSeconds: 0
+      # hostNetwork: true
+      containers:
+      - name: metallb-neighbour-helper
+        image: kradalby/metallb-neighbour-helper:latest
+        imagePullPolicy: Always
+        args:
+        - --metallb-config=config
+        - --metallb-helper-config=config-helper
+        resources:
+          limits:
+            cpu: 10m
+            memory: 30Mi
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true

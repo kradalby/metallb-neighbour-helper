@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # This should be the same namespace as MetalLB
+  namespace: metallb-system
+  name: config-helper
+data:
+  config: |
+      providers:
+        - name: "opnTest"
+          # This must be the same peer-address as in the MetalLB config entry
+          # for this provider
+          peer-address: "172.16.207.143"
+          provider: "opnsense"
+          url: "http://172.16.207.143"
+          in-secure: True
+          key: "6X6860M4fOqJUmoJV9JDHikEucE+UMIi/75uZzo1TzGz1WB0RTbIpBgHdvqBo7Xj6vsWb80rkiYWcZFN"
+          secret: "Z1RnjqmGQ3/6Zr3yWdtFAOsfvzD+vR3ysbJ9AeneXAg7gBueD6zJdXh58OnlUfPFDM76v9di3mSt5qNM"
+
+          # vCloud is not yet supported
+          # - name: "vCloudTest"
+          #   provider: "vcloud"
+          #   url: "http://localhost:8080"
+          #   in-secure: True
+          #   user: kradalby
+          #   password: password
+          #   org: organization
+          #   vdc: datacenter

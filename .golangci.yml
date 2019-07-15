@@ -1,0 +1,12 @@
+linters:
+  enable-all: true
+  disable:
+  #     - maligned
+  #     - prealloc
+  #     - gosec
+       - gochecknoglobals
+       - gochecknoinits
+
+run:
+  skip-dirs:
+    - metallb-config
