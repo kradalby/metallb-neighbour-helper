@@ -1,4 +1,5 @@
 app
+metallb-neighbour-helper
 spa/
 tmp/
 db/

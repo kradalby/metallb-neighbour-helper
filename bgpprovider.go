@@ -10,7 +10,7 @@ import (
 
 type BgpProvider interface {
 	Add(net.IP, uint32) error
-	Delete(net.IP) error
+	Delete(net.IP, uint32) error
 	Name() string
 	URL() string
 	PeerIP() net.IP
@@ -51,9 +51,12 @@ func (opn OpnSenseProvider) Add(ip net.IP, as uint32) error {
 		return err
 	}
 
+	asString := strconv.Itoa(int(as))
+
 	for _, neighbour := range neighbours {
 		if ip.Equal(net.ParseIP(neighbour.Address)) &&
-			neighbour.Remoteas == strconv.Itoa(int(as)) {
+			asString == neighbour.Remoteas {
+			log.Printf("[INFO] Neighbour %s with AS number %d has already been added", ip.String(), as)
 			return nil
 		}
 	}
@@ -61,7 +64,7 @@ func (opn OpnSenseProvider) Add(ip net.IP, as uint32) error {
 	newNeighbour := opnsense.BgpNeighborSet{}
 	newNeighbour.Enabled = "1"
 	newNeighbour.Address = ip.String()
-	newNeighbour.Remoteas = strconv.Itoa(int(as))
+	newNeighbour.Remoteas = asString
 	// newNeighbour.Nexthopself = "0"
 	// newNeighbour.Defaultoriginate = "0"
 	newNeighbour.Updatesource = "wan"
@@ -79,16 +82,19 @@ func (opn OpnSenseProvider) Add(ip net.IP, as uint32) error {
 	return nil
 }
 
-func (opn OpnSenseProvider) Delete(ip net.IP) error {
+func (opn OpnSenseProvider) Delete(ip net.IP, as uint32) error {
 
 	neighbours, err := opn.c.BgpNeighborList()
 	if err != nil {
 		return err
 	}
 
+	asString := strconv.Itoa(int(as))
+
 	for _, neighbour := range neighbours {
-		if ip.Equal(net.ParseIP(neighbour.Address)) {
-			log.Printf("[INFO] Removing neighbour %s with IP %s", neighbour.UUID.String(), ip.String())
+		if ip.Equal(net.ParseIP(neighbour.Address)) &&
+			asString == neighbour.Remoteas {
+			log.Printf("[INFO] Removing neighbour %s with IP %s and AS %d", neighbour.UUID.String(), ip.String(), as)
 
 			_, err := opn.c.BgpNeighborDelete(*neighbour.UUID)
 			if err != nil {

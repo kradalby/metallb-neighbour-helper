@@ -128,7 +128,7 @@ func main() {
 			if !ok {
 				log.Printf("[INFO] Could not cast event object to Node type: %#v", event.Object)
 			} else {
-				err := deleteNode(node, providers)
+				err := deleteNode(node, asNumberMap, providers)
 				if err != nil {
 					log.Println(err)
 				}
@@ -187,23 +187,25 @@ func addNode(node corev1.Node, asNumberMap map[BgpProvider][]uint32, providers [
 	return nil
 }
 
-func deleteNode(node *corev1.Node, providers []BgpProvider) error {
+func deleteNode(node *corev1.Node, asNumberMap map[BgpProvider][]uint32, providers []BgpProvider) error {
 	ip, err := utilnode.GetNodeHostIP(node)
 	if err != nil {
 		return fmt.Errorf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
 
 	}
 	for _, provider := range providers {
-		log.Printf("[INFO] Deleting node %s with ip %s to BGP provider %s", node.Name, ip.String(), provider.Name())
-		err := provider.Delete(ip)
-		if err != nil {
-			return fmt.Errorf(
-				"[ERROR] Could not delete ip %s of node %s to provider %s, error: %s",
-				ip.String(),
-				node.Name,
-				provider.Name(),
-				err,
-			)
+		for _, asNumber := range asNumberMap[provider] {
+			log.Printf("[INFO] Deleting node %s with ip %s to BGP provider %s", node.Name, ip.String(), provider.Name())
+			err := provider.Delete(ip, asNumber)
+			if err != nil {
+				return fmt.Errorf(
+					"[ERROR] Could not delete ip %s of node %s to provider %s, error: %s",
+					ip.String(),
+					node.Name,
+					provider.Name(),
+					err,
+				)
+			}
 		}
 	}
 	return nil
