@@ -73,11 +73,11 @@ func (opn OpnSenseProvider) Add(ip net.IP, as uint32) error {
 	// newNeighbour.LinkedRoutemapIn = ""
 	// newNeighbour.LinkedRoutemapOut = ""
 
-	log.Printf("[INFO] Adding neighbour: %s with AS number: %d", ip.String(), as)
 	_, err = opn.c.BgpNeighborAdd(newNeighbour)
 	if err != nil {
 		return err
 	}
+	log.Printf("[INFO] Added neighbour: %s with AS number: %d", ip.String(), as)
 
 	return nil
 }
@@ -94,12 +94,12 @@ func (opn OpnSenseProvider) Delete(ip net.IP, as uint32) error {
 	for _, neighbour := range neighbours {
 		if ip.Equal(net.ParseIP(neighbour.Address)) &&
 			asString == neighbour.Remoteas {
-			log.Printf("[INFO] Removing neighbour %s with IP %s and AS %d", neighbour.UUID.String(), ip.String(), as)
 
 			_, err := opn.c.BgpNeighborDelete(*neighbour.UUID)
 			if err != nil {
 				return err
 			}
+			log.Printf("[INFO] Removed neighbour %s with IP %s and AS %d", neighbour.UUID.String(), ip.String(), as)
 		}
 	}
 	return nil
