@@ -1,43 +1,52 @@
+---
+kind: pipeline
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
 workspace:
   base: /go/src
   path: github.com/kradalby/metallb-neighbour-helper
 
-pipeline:
-  lint:
-    image: golang:1.12
-    commands:
-        # - go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-          - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.17.1
-          - golangci-lint --version
-          - golangci-lint run --deadline 30m
-    environment:
-        - GO111MODULE=on
+steps:
+- name: lint
+  pull: if-not-exists
+  image: golang:1.12
+  commands:
+  - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.17.1
+  - golangci-lint --version
+  - golangci-lint run --deadline 30m
+  environment:
+    GO111MODULE: on
 
-  build:
-    image: plugins/docker
+- name: build
+  pull: if-not-exists
+  image: banzaicloud/drone-kaniko
+  settings:
+    cache: true
     repo: kradalby/metallb-neighbour-helper
-    # auto_tag: true
-    secrets: [ docker_username, docker_password ]
     tags:
-        - ${DRONE_COMMIT_SHA:0:8}
-        - latest
+    - ${DRONE_COMMIT_SHA:0:8}
+    - latest
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
 
-  # deploy:
-  #    image: quay.io/honestbee/drone-kubernetes
-  #    deployment: bork-deployment
-  #    repo: kradalby/bork
-  #    container: bork-container
-  #    namespace: bork
-  #    secrets: [ kubernetes_server, kubernetes_cert, kubernetes_token ]
-  #    tag:
-  #      - ${DRONE_COMMIT_SHA:0:8}
-
-  notify:
-    image: drillster/drone-email
-    host: smtp.fap.no
-    skip_verify: true
-    port: 25
+- name: notify
+  pull: if-not-exists
+  image: drillster/drone-email
+  settings:
     from: drone@drone.fap.no
-    recipients: [ kradalby@kradalby.no ]
-    when:
-      status: [ success, changed, failure ]
+    host: smtp.fap.no
+    port: 25
+    recipients:
+    - kradalby@kradalby.no
+    skip_verify: true
+  when:
+    status:
+    - success
+    - changed
+    - failure
