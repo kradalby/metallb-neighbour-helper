@@ -22,8 +22,9 @@ steps:
     GO111MODULE: on
 
 - name: build
-  pull: if-not-exists
-  image: banzaicloud/drone-kaniko
+  # pull: if-not-exists
+  pull: always
+  image: kradalby/drone-kaniko
   settings:
     cache: true
     repo: kradalby/metallb-neighbour-helper
