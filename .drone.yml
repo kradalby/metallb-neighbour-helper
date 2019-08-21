@@ -26,7 +26,7 @@ steps:
   pull: always
   image: banzaicloud/drone-kaniko
   settings:
-    cache: true
+    cache: false
     repo: kradalby/metallb-neighbour-helper
     tags:
     - ${DRONE_COMMIT_SHA:0:8}
