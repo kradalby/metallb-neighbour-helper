@@ -46,3 +46,9 @@ In the `metallb-helper-configmap.yaml` the following parts might need configurat
 
 -   `namespace`: for the `ConfigMap` must be the same as MetalLB
 -   `peer-address`: must be the same IP/Address as the `peer-address` in the associated peer in MetalLB
+
+### Helm chart
+
+I have added a Helm chart to the repo, should allow easy installation, remember
+to check the variables mentioned over and read the values that can be configured
+in `values.yaml`

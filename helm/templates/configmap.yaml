@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "metallb-helper.fullname" . }}-config
+  labels:
+    app: metallb
+    component: neighbour-helper
+data:
+  {{- with .Values.configmap }}
+  config: |
+      {{- toYaml . | nindent 8 }}
+  {{- end }}

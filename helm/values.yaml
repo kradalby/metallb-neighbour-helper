@@ -1,0 +1,32 @@
+# Default values for metallb-helper.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+    repository: kradalby/metallb-neighbour-helper
+    tag: latest
+    pullPolicy: Always
+
+# NOTE: If you install metallb with helm, you need to check these variables!
+# They will probably be set based on the "release name" from helm.
+metallb:
+    serviceAccountName: metallb-speaker
+    # Config map containing metallb's configuration
+    configmap: metallb
+
+configmap:
+    providers:
+      - name: "router.example.com"
+        peer-address: "10.0.0.1"
+        provider: "opnsense"
+        url: "https://10.0.0.1"
+        in-secure: True
+        key: "<key>"
+        secret: "<secret>"
+
+resources:
+    limits:
+        cpu: 10m
+        memory: 30Mi

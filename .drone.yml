@@ -24,7 +24,7 @@ steps:
 - name: build
   # pull: if-not-exists
   pull: always
-  image: plugins/docker
+  image: banzaicloud/drone-kaniko
   settings:
     cache: false
     repo: kradalby/metallb-neighbour-helper
