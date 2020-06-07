@@ -1,53 +1,120 @@
 ---
-kind: pipeline
-name: default
-
-platform:
-  os: linux
-  arch: amd64
-
-workspace:
-  base: /go/src
-  path: github.com/kradalby/metallb-neighbour-helper
-
-steps:
-- name: lint
-  pull: if-not-exists
-  image: golang:1.12
-  commands:
-  - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.17.1
-  - golangci-lint --version
-  - golangci-lint run --deadline 30m
-  environment:
-    GO111MODULE: on
-
-- name: build
-  # pull: if-not-exists
-  pull: always
-  image: banzaicloud/drone-kaniko
-  settings:
-    cache: false
-    repo: kradalby/metallb-neighbour-helper
-    tags:
-    - ${DRONE_COMMIT_SHA:0:8}
-    - latest
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-
-- name: notify
-  pull: if-not-exists
-  image: drillster/drone-email
-  settings:
-    from: drone@drone.fap.no
-    host: smtp.fap.no
-    port: 25
-    recipients:
-    - kradalby@kradalby.no
-    skip_verify: true
-  when:
-    status:
-    - success
-    - changed
-    - failure
+{
+   "kind": "pipeline",
+   "name": "default",
+   "node_selector": {
+      "drone": true
+   },
+   "steps": [
+      {
+         "commands": [
+            "golangci-lint run -v --timeout 10m"
+         ],
+         "image": "golangci/golangci-lint:latest",
+         "name": "Go lint",
+         "pull": "always"
+      },
+      {
+         "environment": {
+            "DOCKER_BUILDKIT": 1
+         },
+         "image": "plugins/docker",
+         "name": "Build container image",
+         "pull": "always",
+         "when": {
+            "branch": {
+               "exclude": [
+                  "master"
+               ]
+            }
+         }
+      },
+      {
+         "environment": {
+            "DOCKER_BUILDKIT": 1
+         },
+         "image": "plugins/docker",
+         "name": "Publish image kradalby/metallb-neighbour-helper",
+         "pull": "always",
+         "settings": {
+            "password": {
+               "from_secret": "docker_password"
+            },
+            "repo": "kradalby/metallb-neighbour-helper",
+            "tags": [
+               "latest",
+               "${DRONE_COMMIT_SHA:0:8}"
+            ],
+            "username": {
+               "from_secret": "docker_username"
+            }
+         },
+         "when": {
+            "branch": [
+               "master"
+            ],
+            "event": [
+               "push"
+            ]
+         }
+      },
+      {
+         "image": "appleboy/drone-discord",
+         "name": "Notify Discord",
+         "pull": "always",
+         "settings": {
+            "message": "{{#success build.status}} ✅  Build #{{build.number}} of `{{repo.name}}` succeeded.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n🌐 {{ build.link }}\n\n ✅ duration: {{duration build.started build.finished}} \n\n ✅ started: {{datetime build.started \"2006/01/02 15:04\" \"UTC\"}} \n\n ✅ finished: {{datetime build.finished \"2006/01/02 15:04\" \"UTC\"}} {{else}} ❌  Build #{{build.number}} of `{{repo.name}}` failed.\n\n📝 Commit by {{commit.author}} on `{{commit.branch}}`:\n``` {{commit.message}} ```\n🌐 {{ build.link }}\n\n ✅ duration: {{duration build.started build.finished}} \n\n ✅ started: {{datetime build.started \"2006/01/02 15:04\" \"UTC\"}} \n\n ✅ finished: {{datetime build.finished \"2006/01/02 15:04\" \"UTC\"}}{{/success}}\n",
+            "webhook_id": {
+               "from_secret": "discord_webhook_id"
+            },
+            "webhook_token": {
+               "from_secret": "discord_webhook_token"
+            }
+         },
+         "when": {
+            "status": [
+               "success",
+               "failure"
+            ]
+         }
+      }
+   ],
+   "type": "kubernetes"
+}
+---
+{
+   "get": {
+      "name": "id",
+      "path": "discord-build"
+   },
+   "kind": "secret",
+   "name": "discord_webhook_id"
+}
+---
+{
+   "get": {
+      "name": "token",
+      "path": "discord-build"
+   },
+   "kind": "secret",
+   "name": "discord_webhook_token"
+}
+---
+{
+   "get": {
+      "name": "username",
+      "path": "docker"
+   },
+   "kind": "secret",
+   "name": "docker_username"
+}
+---
+{
+   "get": {
+      "name": "password",
+      "path": "docker"
+   },
+   "kind": "secret",
+   "name": "docker_password"
+}
+...
