@@ -21,6 +21,11 @@
          "image": "plugins/docker",
          "name": "Build container image",
          "pull": "always",
+         "trigger": {
+            "event": [
+               "pull_request"
+            ]
+         },
          "when": {
             "branch": {
                "exclude": [
