@@ -1,10 +1,11 @@
-package main
+package config
 
 import (
 	"fmt"
 	"log"
 	"net"
 
+	"github.com/kradalby/metallb-neighbour-helper/provider"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -17,7 +18,7 @@ const (
 	VCloud   Provider = "vcloud"
 )
 
-type provider struct {
+type providerConfig struct {
 	Provider    Provider
 	Name        string
 	URL         string // `yaml:"url"`
@@ -36,17 +37,17 @@ type provider struct {
 }
 
 type config struct {
-	Providers []provider `yaml:"providers"`
+	Providers []providerConfig `yaml:"providers"`
 }
 
 //
-func Parse(bs []byte) ([]BgpProvider, error) {
+func Parse(bs []byte) ([]provider.BgpProvider, error) {
 	var raw config
 	if err := yaml.UnmarshalStrict(bs, &raw); err != nil {
 		return nil, fmt.Errorf("could not parse config: %s", err)
 	}
 
-	providers := []BgpProvider{}
+	providers := []provider.BgpProvider{}
 
 	for _, prov := range raw.Providers {
 
@@ -78,7 +79,7 @@ func Parse(bs []byte) ([]BgpProvider, error) {
 			if prov.Secret == "" {
 				return nil, fmt.Errorf("'secret' has to be set for OPNsense provider: %#v", prov)
 			}
-			opn, err := NewOpnSenseProvider(prov.URL, prov.Key, prov.Secret, peerIPAddress, prov.InSecure)
+			opn, err := provider.NewOpnSenseProvider(prov.URL, prov.Key, prov.Secret, peerIPAddress, prov.InSecure)
 			if err != nil {
 				return nil, err
 			}
@@ -86,16 +87,16 @@ func Parse(bs []byte) ([]BgpProvider, error) {
 
 		case VCloud:
 			if prov.User == "" {
-				return nil, fmt.Errorf("'user' has to be set for OPNsense provider: %#v", prov)
+				return nil, fmt.Errorf("'user' has to be set for vCloud provider: %#v", prov)
 			}
 			if prov.Password == "" {
-				return nil, fmt.Errorf("'password' has to be set for OPNsense provider: %#v", prov)
+				return nil, fmt.Errorf("'password' has to be set for vCloud provider: %#v", prov)
 			}
 			if prov.Org == "" {
-				return nil, fmt.Errorf("'org' has to be set for OPNsense provider: %#v", prov)
+				return nil, fmt.Errorf("'org' has to be set for vCloud provider: %#v", prov)
 			}
 			if prov.Vdc == "" {
-				return nil, fmt.Errorf("'vdc' has to be set for OPNsense provider: %#v", prov)
+				return nil, fmt.Errorf("'vdc' has to be set for vCloud provider: %#v", prov)
 			}
 			log.Println("vCloud is not supported yet")
 		default:

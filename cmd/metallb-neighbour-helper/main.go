@@ -11,9 +11,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/watch"
 
-	metallbConfig "github.com/kradalby/metallb-neighbour-helper/metallb-config"
+	metallbConfig "github.com/kradalby/metallb-neighbour-helper/pkg/metallb-config"
 
 	"github.com/gobuffalo/envy"
+	"github.com/kradalby/metallb-neighbour-helper/config"
+	"github.com/kradalby/metallb-neighbour-helper/kube"
+	"github.com/kradalby/metallb-neighbour-helper/provider"
 	utilnode "k8s.io/kubernetes/pkg/util/node"
 )
 
@@ -77,7 +80,7 @@ func main() {
 	}
 
 	log.Printf("[TRACE] Parsing MetalLB Helper configuration \n")
-	providers, err := Parse([]byte(metallbHelperConfigMap.Data["config"]))
+	providers, err := config.Parse([]byte(metallbHelperConfigMap.Data["config"]))
 	if err != nil {
 		log.Fatalf("[FATAL] Failed to parse MetalLB config with error: \n %s", err)
 	}
@@ -139,9 +142,9 @@ func main() {
 
 }
 
-func getKubernetesClient() (*KubernetesClient, error) {
+func getKubernetesClient() (*kube.KubernetesClient, error) {
 	if ENV == DEVELOPMENT {
-		client, err := NewOutOfClusterClient(envy.Get("KUBECONFIG", "~/.kube/config"))
+		client, err := kube.NewOutOfClusterClient(envy.Get("KUBECONFIG", "~/.kube/config"))
 		if err != nil {
 			return nil, err
 		}
@@ -149,7 +152,7 @@ func getKubernetesClient() (*KubernetesClient, error) {
 		return client, err
 	}
 
-	client, err := NewInClusterClient()
+	client, err := kube.NewInClusterClient()
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +160,7 @@ func getKubernetesClient() (*KubernetesClient, error) {
 	return client, err
 }
 
-func addNode(node corev1.Node, asNumberMap map[BgpProvider][]uint32, providers []BgpProvider) error {
+func addNode(node corev1.Node, asNumberMap map[provider.BgpProvider][]uint32, providers []provider.BgpProvider) error {
 	ip, err := utilnode.GetNodeHostIP(&node)
 	if err != nil {
 		return fmt.Errorf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
@@ -187,7 +190,7 @@ func addNode(node corev1.Node, asNumberMap map[BgpProvider][]uint32, providers [
 	return nil
 }
 
-func deleteNode(node *corev1.Node, asNumberMap map[BgpProvider][]uint32, providers []BgpProvider) error {
+func deleteNode(node *corev1.Node, asNumberMap map[provider.BgpProvider][]uint32, providers []provider.BgpProvider) error {
 	ip, err := utilnode.GetNodeHostIP(node)
 	if err != nil {
 		return fmt.Errorf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
@@ -212,8 +215,8 @@ func deleteNode(node *corev1.Node, asNumberMap map[BgpProvider][]uint32, provide
 
 }
 
-func pairProvidersAndASNumbers(providers []BgpProvider, peers []*metallbConfig.Peer) map[BgpProvider][]uint32 {
-	pairs := make(map[BgpProvider][]uint32)
+func pairProvidersAndASNumbers(providers []provider.BgpProvider, peers []*metallbConfig.Peer) map[provider.BgpProvider][]uint32 {
+	pairs := make(map[provider.BgpProvider][]uint32)
 
 	for _, provider := range providers {
 		log.Printf("[TRACE] Finding AS numbers associated with %s", provider.Name())
