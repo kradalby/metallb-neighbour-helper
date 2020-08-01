@@ -4,13 +4,12 @@ ENV GO111MODULE=on
 
 WORKDIR /src
 
-COPY go.mod .
-COPY go.sum .
+COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build -o /bin/app
+RUN CGO_ENABLED=0 go build ./cmd/metallb-neighbour-helper -o /bin/app
 
 FROM ubuntu:latest
 RUN apt-get update && apt-get install -y \

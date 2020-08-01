@@ -7,6 +7,14 @@
    },
    "steps": [
       {
+         "commands": [
+            "golangci-lint run -v --timeout 10m"
+         ],
+         "image": "golangci/golangci-lint:latest",
+         "name": "Go lint",
+         "pull": "always"
+      },
+      {
          "environment": {
             "DOCKER_BUILDKIT": 1
          },

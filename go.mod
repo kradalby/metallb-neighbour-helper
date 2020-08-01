@@ -1,13 +1,13 @@
 module github.com/kradalby/metallb-neighbour-helper
 
-go 1.12
+go 1.14
 
 require (
 	github.com/gobuffalo/envy v1.7.0
 	github.com/googleapis/gnostic v0.3.0 // indirect
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/kradalby/opnsense-go v0.0.0-20190714195413-c9156d68cd32
-	github.com/mikioh/ipaddr v0.0.0-20190404000644-d465c8ab6721 // indirect
+	github.com/mikioh/ipaddr v0.0.0-20190404000644-d465c8ab6721
 	go.uber.org/zap v1.10.0 // indirect
 	go.universe.tf/metallb v0.7.3 // indirect
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45 // indirect
@@ -45,7 +45,7 @@ replace (
 	k8s.io/kube-proxy => k8s.io/kube-proxy v0.18.6
 	k8s.io/kube-scheduler => k8s.io/kube-scheduler v0.18.6
 	k8s.io/kubelet => k8s.io/kubelet v0.18.6
-	k8s.io/kubernetes => k8s.io/kubernetes v1.15.0
+	k8s.io/kubernetes => k8s.io/kubernetes v1.18.6
 	k8s.io/legacy-cloud-providers => k8s.io/legacy-cloud-providers v0.18.6
 	k8s.io/metrics => k8s.io/metrics v0.18.6
 	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.18.6

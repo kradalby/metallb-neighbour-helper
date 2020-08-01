@@ -15,7 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metallb-config // import "go.universe.tf/metallb/internal/config"
+package metallbconfig // import "go.universe.tf/metallb/internal/config"
 
 import (
 	"errors"

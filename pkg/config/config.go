@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/kradalby/metallb-neighbour-helper/provider"
+	"github.com/kradalby/metallb-neighbour-helper/pkg/provider"
 	yaml "gopkg.in/yaml.v2"
 )
 

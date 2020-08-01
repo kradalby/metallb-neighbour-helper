@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -11,12 +12,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/watch"
 
-	metallbConfig "github.com/kradalby/metallb-neighbour-helper/pkg/metallb-config"
+	metallbConfig "github.com/kradalby/metallb-neighbour-helper/pkg/metallbconfig"
 
 	"github.com/gobuffalo/envy"
-	"github.com/kradalby/metallb-neighbour-helper/config"
-	"github.com/kradalby/metallb-neighbour-helper/kube"
-	"github.com/kradalby/metallb-neighbour-helper/provider"
+	"github.com/kradalby/metallb-neighbour-helper/pkg/config"
+	"github.com/kradalby/metallb-neighbour-helper/pkg/kube"
+	"github.com/kradalby/metallb-neighbour-helper/pkg/provider"
 	utilnode "k8s.io/kubernetes/pkg/util/node"
 )
 
@@ -53,6 +54,7 @@ func main() {
 		namespace,
 	)
 	metallbConfigMap, err := kubeClient.Client.CoreV1().ConfigMaps(namespace).Get(
+		context.TODO(),
 		*metallbConfigMapName,
 		metav1.GetOptions{},
 	)
@@ -72,6 +74,7 @@ func main() {
 		namespace,
 	)
 	metallbHelperConfigMap, err := kubeClient.Client.CoreV1().ConfigMaps(namespace).Get(
+		context.TODO(),
 		*metallbHelperConfigMapName,
 		metav1.GetOptions{},
 	)
@@ -88,7 +91,7 @@ func main() {
 	asNumberMap := pairProvidersAndASNumbers(providers, mlbConfig.Peers)
 
 	log.Printf("[INFO] Getting list of Nodes from Kubernetes cluster")
-	nodes, err := kubeClient.Client.CoreV1().Nodes().List(metav1.ListOptions{})
+	nodes, err := kubeClient.Client.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		log.Fatalf("[FATAL] Failed to get list of Kubernetes Nodes with error: \n %s", err)
 	}
@@ -101,7 +104,7 @@ func main() {
 	}
 
 	log.Printf("[INFO] Watching Kubernetes nodes for change")
-	w, err := kubeClient.Client.CoreV1().Nodes().Watch(metav1.ListOptions{})
+	w, err := kubeClient.Client.CoreV1().Nodes().Watch(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		log.Fatalf("[FATAL] Failed to watch Kubernetes cluster with error: \n %s", err)
 	}

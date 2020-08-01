@@ -1,11 +1,15 @@
 linters:
-  enable-all: true
+  fast: false
+  presets:
+    - style
+    - bugs
+    - unused
+    - format
   disable:
-  #     - maligned
-  #     - prealloc
-  #     - gosec
-       - gochecknoglobals
-       - gochecknoinits
+    - interfacer
+    - gomnd
+    - godox
+    - funlen
 
 run:
   skip-dirs:
