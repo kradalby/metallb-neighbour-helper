@@ -35,7 +35,6 @@ func NewInClusterClient() (*KubernetesClient, error) {
 }
 
 func NewOutOfClusterClient(kubeconf string) (*KubernetesClient, error) {
-
 	log.Printf("[INFO] Creating OutOfClusterConfiguration Kubernetes client\n")
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconf)
 	if err != nil {

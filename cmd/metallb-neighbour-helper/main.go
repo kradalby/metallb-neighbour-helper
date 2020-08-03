@@ -23,8 +23,10 @@ import (
 
 // var PRODUCTION = "production"
 
-var DEVELOPMENT = "development"
-var ENV = envy.Get("GO_ENV", DEVELOPMENT)
+var (
+	DEVELOPMENT = "development"
+	ENV         = envy.Get("GO_ENV", DEVELOPMENT)
+)
 
 func main() {
 	var (
@@ -120,7 +122,6 @@ func main() {
 				if err != nil {
 					log.Println(err)
 				}
-
 			}
 		// We are not dealing with Modified for now.
 		// case watch.Modified:
@@ -138,11 +139,9 @@ func main() {
 				if err != nil {
 					log.Println(err)
 				}
-
 			}
 		}
 	}
-
 }
 
 func getKubernetesClient() (*kube.KubernetesClient, error) {
@@ -167,7 +166,6 @@ func addNode(node corev1.Node, asNumberMap map[provider.BgpProvider][]uint32, pr
 	ip, err := utilnode.GetNodeHostIP(&node)
 	if err != nil {
 		return fmt.Errorf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
-
 	}
 	for _, provider := range providers {
 		for _, asNumber := range asNumberMap[provider] {
@@ -197,7 +195,6 @@ func deleteNode(node *corev1.Node, asNumberMap map[provider.BgpProvider][]uint32
 	ip, err := utilnode.GetNodeHostIP(node)
 	if err != nil {
 		return fmt.Errorf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
-
 	}
 	for _, provider := range providers {
 		for _, asNumber := range asNumberMap[provider] {
@@ -215,7 +212,6 @@ func deleteNode(node *corev1.Node, asNumberMap map[provider.BgpProvider][]uint32
 		}
 	}
 	return nil
-
 }
 
 func pairProvidersAndASNumbers(providers []provider.BgpProvider, peers []*metallbConfig.Peer) map[provider.BgpProvider][]uint32 {

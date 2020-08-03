@@ -45,7 +45,6 @@ func NewOpnSenseProvider(url, key, secret string, peerIPAddress net.IP, inSecure
 }
 
 func (opn OpnSenseProvider) Add(ip net.IP, as uint32) error {
-
 	neighbours, err := opn.c.BgpNeighborList()
 	if err != nil {
 		return err
@@ -83,7 +82,6 @@ func (opn OpnSenseProvider) Add(ip net.IP, as uint32) error {
 }
 
 func (opn OpnSenseProvider) Delete(ip net.IP, as uint32) error {
-
 	neighbours, err := opn.c.BgpNeighborList()
 	if err != nil {
 		return err
@@ -94,7 +92,6 @@ func (opn OpnSenseProvider) Delete(ip net.IP, as uint32) error {
 	for _, neighbour := range neighbours {
 		if ip.Equal(net.ParseIP(neighbour.Address)) &&
 			asString == neighbour.Remoteas {
-
 			_, err := opn.c.BgpNeighborDelete(*neighbour.UUID)
 			if err != nil {
 				return err

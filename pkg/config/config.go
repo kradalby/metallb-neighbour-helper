@@ -50,7 +50,6 @@ func Parse(bs []byte) ([]provider.BgpProvider, error) {
 	providers := []provider.BgpProvider{}
 
 	for _, prov := range raw.Providers {
-
 		if prov.Provider == "" {
 			return nil, fmt.Errorf("'provider' has to be set for provider: %#v", prov)
 		}
@@ -68,7 +67,6 @@ func Parse(bs []byte) ([]provider.BgpProvider, error) {
 		peerIPAddress := net.ParseIP(prov.PeerAddress)
 		if peerIPAddress == nil {
 			return nil, fmt.Errorf("'peer-address' has to be a valid IP: %s", prov.PeerAddress)
-
 		}
 
 		switch prov.Provider {
