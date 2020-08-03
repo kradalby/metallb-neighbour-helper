@@ -58,6 +58,7 @@ func (opn OpnSenseProvider) Add(ip net.IP, as uint32) error {
 		if ip.Equal(net.ParseIP(neighbour.Address)) &&
 			asString == neighbour.Remoteas {
 			log.Printf("[INFO] Neighbour %s with AS number %d has already been added", ip.String(), as)
+
 			return nil
 		}
 	}

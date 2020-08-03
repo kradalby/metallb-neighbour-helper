@@ -168,6 +168,7 @@ func addNode(node corev1.Node, asNumberMap map[provider.BgpProvider][]uint32, pr
 	ip, err := utilnode.GetNodeHostIP(&node)
 	if err != nil {
 		log.Printf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
+
 		return err
 	}
 
@@ -206,6 +207,7 @@ func deleteNode(
 	ip, err := utilnode.GetNodeHostIP(node)
 	if err != nil {
 		log.Printf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
+
 		return err
 	}
 
