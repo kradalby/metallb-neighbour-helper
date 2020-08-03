@@ -2,39 +2,39 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  # This should be the same namespace as MetalLB
-  namespace: metallb-system
-  name: metallb-neighbour-helper
-  labels:
-    app: metallb
-    component: neighbour-helper
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: metallb
-      component: neighbour-helper
-  template:
-    metadata:
-      labels:
+    # This should be the same namespace as MetalLB
+    namespace: metallb-system
+    name: metallb-neighbour-helper
+    labels:
         app: metallb
         component: neighbour-helper
-    spec:
-      # This has to be the MetalLB Speaker service account
-      serviceAccountName: speaker
-      terminationGracePeriodSeconds: 0
-      containers:
-      - name: metallb-neighbour-helper
-        image: kradalby/metallb-neighbour-helper:latest
-        imagePullPolicy: Always
-        args:
-        # This have to be correspond with MetalLB's configmap name!
-        - --metallb-config=config
-        - --metallb-helper-config=config-helper
-        resources:
-          limits:
-            cpu: 10m
-            memory: 30Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: metallb
+            component: neighbour-helper
+    template:
+        metadata:
+            labels:
+                app: metallb
+                component: neighbour-helper
+        spec:
+            # This has to be the MetalLB Speaker service account
+            serviceAccountName: speaker
+            terminationGracePeriodSeconds: 0
+            containers:
+                - name: metallb-neighbour-helper
+                  image: kradalby/metallb-neighbour-helper:latest
+                  imagePullPolicy: Always
+                  args:
+                      # This have to be correspond with MetalLB's configmap name!
+                      - --metallb-config=config
+                      - --metallb-helper-config=config-helper
+                  resources:
+                      limits:
+                          cpu: 10m
+                          memory: 30Mi
+                  securityContext:
+                      allowPrivilegeEscalation: false
+                      readOnlyRootFilesystem: true

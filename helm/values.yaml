@@ -18,13 +18,13 @@ metallb:
 
 configmap:
     providers:
-      - name: "router.example.com"
-        peer-address: "10.0.0.1"
-        provider: "opnsense"
-        url: "https://10.0.0.1"
-        in-secure: True
-        key: "<key>"
-        secret: "<secret>"
+        - name: 'router.example.com'
+          peer-address: '10.0.0.1'
+          provider: 'opnsense'
+          url: 'https://10.0.0.1'
+          in-secure: True
+          key: '<key>'
+          secret: '<secret>'
 
 resources:
     limits:
