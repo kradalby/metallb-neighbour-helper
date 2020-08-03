@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -131,13 +130,6 @@ func main() {
 					log.Println(err)
 				}
 			}
-		// We are not dealing with Modified for now.
-		// case watch.Modified:
-		// 	node, ok := event.Object.(*corev1.Node)
-		// 	if !ok {
-		// 		log.Fatalf(errors.New("unexpected object type, not Node"))
-		// 	}
-		// 	log.Printf("Modified: %#v \n", node)
 		case watch.Deleted:
 			node, ok := event.Object.(*corev1.Node)
 			if !ok {
@@ -148,6 +140,8 @@ func main() {
 					log.Println(err)
 				}
 			}
+		case watch.Bookmark, watch.Modified, watch.Error:
+			log.Printf("[TRACE] Unactionable event: %s", event.Type)
 		}
 	}
 }
@@ -173,7 +167,8 @@ func getKubernetesClient() (*kube.KubernetesClient, error) {
 func addNode(node corev1.Node, asNumberMap map[provider.BgpProvider][]uint32, providers []provider.BgpProvider) error {
 	ip, err := utilnode.GetNodeHostIP(&node)
 	if err != nil {
-		return fmt.Errorf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
+		log.Printf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
+		return err
 	}
 
 	for _, provider := range providers {
@@ -188,13 +183,15 @@ func addNode(node corev1.Node, asNumberMap map[provider.BgpProvider][]uint32, pr
 
 			err := provider.Add(ip, asNumber)
 			if err != nil {
-				return fmt.Errorf(
+				log.Printf(
 					"[ERROR] Could not add ip %s of node %s to provider %s, error: %s",
 					ip.String(),
 					node.Name,
 					provider.Name(),
 					err,
 				)
+
+				return err
 			}
 		}
 	}
@@ -208,7 +205,8 @@ func deleteNode(
 	providers []provider.BgpProvider) error {
 	ip, err := utilnode.GetNodeHostIP(node)
 	if err != nil {
-		return fmt.Errorf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
+		log.Printf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
+		return err
 	}
 
 	for _, provider := range providers {
@@ -217,13 +215,15 @@ func deleteNode(
 
 			err := provider.Delete(ip, asNumber)
 			if err != nil {
-				return fmt.Errorf(
+				log.Printf(
 					"[ERROR] Could not delete ip %s of node %s to provider %s, error: %s",
 					ip.String(),
 					node.Name,
 					provider.Name(),
 					err,
 				)
+
+				return err
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"fmt"
+	"errors"
 	"log"
 	"net"
 
@@ -16,6 +16,22 @@ type Provider string
 const (
 	OpnSense Provider = "opnsense"
 	VCloud   Provider = "vcloud"
+)
+
+var (
+	errProviderProviderMissing    = errors.New("provider is missing from provider definition")
+	errProviderNameMissing        = errors.New("name is missing from provider definition")
+	errProviderURLMissing         = errors.New("url is missing from provider definition")
+	errProviderPeerAddressMissing = errors.New("peer-address is missing from provider definition")
+	errProviderPeerAddressValidIP = errors.New("peer-address is not a valid IP address")
+
+	errOPNsenseProviderKeyMissing    = errors.New("key is missing from OPNsense provider")
+	errOPNsenseProviderSecretMissing = errors.New("secret is missing from OPNsense provider")
+
+	errVCloudProviderUserMissing     = errors.New("user is missing from vCloud provider")
+	errVCloudProviderPasswordMissing = errors.New("password is missing from vCloud provider")
+	errVCloudProviderOrgMissing      = errors.New("org is missing from vCloud provider")
+	errVCloudProviderVdcMissing      = errors.New("vdc is missing from vCloud provider")
 )
 
 type providerConfig struct {
@@ -44,41 +60,41 @@ type config struct {
 func Parse(bs []byte) ([]provider.BgpProvider, error) {
 	var raw config
 	if err := yaml.UnmarshalStrict(bs, &raw); err != nil {
-		return nil, fmt.Errorf("could not parse config: %s", err)
+		return nil, err
 	}
 
 	providers := []provider.BgpProvider{}
 
 	for _, prov := range raw.Providers {
 		if prov.Provider == "" {
-			return nil, fmt.Errorf("'provider' has to be set for provider: %#v", prov)
+			return nil, errProviderProviderMissing
 		}
 
 		if prov.Name == "" {
-			return nil, fmt.Errorf("'name' has to be set for provider: %#v", prov)
+			return nil, errProviderNameMissing
 		}
 
 		if prov.URL == "" {
-			return nil, fmt.Errorf("'url' has to be set for provider: %#v", prov)
+			return nil, errProviderURLMissing
 		}
 
 		if prov.PeerAddress == "" {
-			return nil, fmt.Errorf("'peer-address' has to be set for provider: %#v", prov)
+			return nil, errProviderPeerAddressMissing
 		}
 
 		peerIPAddress := net.ParseIP(prov.PeerAddress)
 		if peerIPAddress == nil {
-			return nil, fmt.Errorf("'peer-address' has to be a valid IP: %s", prov.PeerAddress)
+			return nil, errProviderPeerAddressValidIP
 		}
 
 		switch prov.Provider {
 		case OpnSense:
 			if prov.Key == "" {
-				return nil, fmt.Errorf("'key' has to be set for OPNsense provider: %#v", prov)
+				return nil, errOPNsenseProviderKeyMissing
 			}
 
 			if prov.Secret == "" {
-				return nil, fmt.Errorf("'secret' has to be set for OPNsense provider: %#v", prov)
+				return nil, errOPNsenseProviderSecretMissing
 			}
 
 			opn, err := provider.NewOpnSenseProvider(prov.URL, prov.Key, prov.Secret, peerIPAddress, prov.InSecure)
@@ -90,19 +106,19 @@ func Parse(bs []byte) ([]provider.BgpProvider, error) {
 
 		case VCloud:
 			if prov.User == "" {
-				return nil, fmt.Errorf("'user' has to be set for vCloud provider: %#v", prov)
+				return nil, errVCloudProviderUserMissing
 			}
 
 			if prov.Password == "" {
-				return nil, fmt.Errorf("'password' has to be set for vCloud provider: %#v", prov)
+				return nil, errVCloudProviderPasswordMissing
 			}
 
 			if prov.Org == "" {
-				return nil, fmt.Errorf("'org' has to be set for vCloud provider: %#v", prov)
+				return nil, errVCloudProviderOrgMissing
 			}
 
 			if prov.Vdc == "" {
-				return nil, fmt.Errorf("'vdc' has to be set for vCloud provider: %#v", prov)
+				return nil, errVCloudProviderVdcMissing
 			}
 
 			log.Println("vCloud is not supported yet")
