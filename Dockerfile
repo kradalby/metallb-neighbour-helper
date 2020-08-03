@@ -9,7 +9,7 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build ./cmd/metallb-neighbour-helper -o /bin/app
+RUN CGO_ENABLED=0 go build -o /bin/app -v cmd/metallb-neighbour-helper/main.go
 
 FROM ubuntu:latest
 RUN apt-get update && apt-get install -y \
