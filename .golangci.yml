@@ -13,4 +13,4 @@ linters:
 
 run:
   skip-dirs:
-    - metallb-config
+    - pkg/metallbconfig

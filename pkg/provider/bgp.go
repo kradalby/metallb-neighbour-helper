@@ -38,7 +38,9 @@ func NewOpnSenseProvider(url, key, secret string, peerIPAddress net.IP, inSecure
 	if err != nil {
 		return nil, err
 	}
+
 	log.Printf("[DEBUG] Init OPNsense client: %#v", client)
+
 	opn.c = client
 
 	return opn, err
@@ -76,6 +78,7 @@ func (opn OpnSenseProvider) Add(ip net.IP, as uint32) error {
 	if err != nil {
 		return err
 	}
+
 	log.Printf("[INFO] Added neighbour: %s with AS number: %d", ip.String(), as)
 
 	return nil
@@ -96,9 +99,11 @@ func (opn OpnSenseProvider) Delete(ip net.IP, as uint32) error {
 			if err != nil {
 				return err
 			}
+
 			log.Printf("[INFO] Removed neighbour %s with IP %s and AS %d", neighbour.UUID.String(), ip.String(), as)
 		}
 	}
+
 	return nil
 }
 

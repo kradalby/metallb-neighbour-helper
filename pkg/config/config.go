@@ -53,9 +53,11 @@ func Parse(bs []byte) ([]provider.BgpProvider, error) {
 		if prov.Provider == "" {
 			return nil, fmt.Errorf("'provider' has to be set for provider: %#v", prov)
 		}
+
 		if prov.Name == "" {
 			return nil, fmt.Errorf("'name' has to be set for provider: %#v", prov)
 		}
+
 		if prov.URL == "" {
 			return nil, fmt.Errorf("'url' has to be set for provider: %#v", prov)
 		}
@@ -74,33 +76,42 @@ func Parse(bs []byte) ([]provider.BgpProvider, error) {
 			if prov.Key == "" {
 				return nil, fmt.Errorf("'key' has to be set for OPNsense provider: %#v", prov)
 			}
+
 			if prov.Secret == "" {
 				return nil, fmt.Errorf("'secret' has to be set for OPNsense provider: %#v", prov)
 			}
+
 			opn, err := provider.NewOpnSenseProvider(prov.URL, prov.Key, prov.Secret, peerIPAddress, prov.InSecure)
 			if err != nil {
 				return nil, err
 			}
+
 			providers = append(providers, opn)
 
 		case VCloud:
 			if prov.User == "" {
 				return nil, fmt.Errorf("'user' has to be set for vCloud provider: %#v", prov)
 			}
+
 			if prov.Password == "" {
 				return nil, fmt.Errorf("'password' has to be set for vCloud provider: %#v", prov)
 			}
+
 			if prov.Org == "" {
 				return nil, fmt.Errorf("'org' has to be set for vCloud provider: %#v", prov)
 			}
+
 			if prov.Vdc == "" {
 				return nil, fmt.Errorf("'vdc' has to be set for vCloud provider: %#v", prov)
 			}
+
 			log.Println("vCloud is not supported yet")
+
 		default:
 			log.Println("Got unsupported provider")
 		}
 	}
+
 	return providers, nil
 }
 

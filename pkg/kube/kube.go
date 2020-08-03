@@ -16,6 +16,7 @@ type KubernetesClient struct {
 func NewInClusterClient() (*KubernetesClient, error) {
 	// creates the in-cluster coonfig
 	log.Printf("[INFO] Creating InClusterConfiguration Kubernetes client\n")
+
 	config, err := restclient.InClusterConfig()
 	if err != nil {
 		return nil, err
@@ -36,6 +37,7 @@ func NewInClusterClient() (*KubernetesClient, error) {
 
 func NewOutOfClusterClient(kubeconf string) (*KubernetesClient, error) {
 	log.Printf("[INFO] Creating OutOfClusterConfiguration Kubernetes client\n")
+
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconf)
 	if err != nil {
 		return nil, err
