@@ -24,6 +24,14 @@
          "pull": "always"
       },
       {
+         "commands": [
+            "go test ./..."
+         ],
+         "image": "golang:1.14.4-stretch",
+         "name": "Go test",
+         "pull": "always"
+      },
+      {
          "environment": {
             "DOCKER_BUILDKIT": 1
          },
