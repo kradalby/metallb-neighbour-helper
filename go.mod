@@ -6,7 +6,7 @@ require (
 	github.com/gobuffalo/envy v1.9.0
 	github.com/googleapis/gnostic v0.3.0 // indirect
 	github.com/imdario/mergo v0.3.7 // indirect
-	github.com/kradalby/opnsense-go v0.0.0-20200802100852-ac6b27d5d1ef
+	github.com/kradalby/opnsense-go v0.0.0-20210123082920-7015c8e12160
 	github.com/mikioh/ipaddr v0.0.0-20190404000644-d465c8ab6721
 	go.uber.org/zap v1.10.0 // indirect
 	go.universe.tf/metallb v0.7.3 // indirect
