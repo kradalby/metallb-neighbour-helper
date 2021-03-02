@@ -4,7 +4,6 @@ go 1.14
 
 require (
 	github.com/gobuffalo/envy v1.9.0
-	github.com/googleapis/gnostic v0.3.0 // indirect
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/kradalby/opnsense-go v0.0.0-20200802100852-ac6b27d5d1ef
 	github.com/mikioh/ipaddr v0.0.0-20190404000644-d465c8ab6721
@@ -14,9 +13,9 @@ require (
 	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.2.8
-	k8s.io/api v0.18.6
-	k8s.io/apimachinery v0.18.6
-	k8s.io/client-go v0.18.6
+	k8s.io/api v0.20.4
+	k8s.io/apimachinery v0.20.4
+	k8s.io/client-go v0.20.4
 	k8s.io/kubernetes v1.18.6
 
 )
@@ -51,7 +50,7 @@ replace (
 	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.18.6
 )
 
-replace k8s.io/kubectl => k8s.io/kubectl v0.18.6
+replace k8s.io/kubectl => k8s.io/kubectl v0.20.4
 
 replace k8s.io/sample-cli-plugin => k8s.io/sample-cli-plugin v0.18.6
 
