@@ -60,7 +60,7 @@
               ],
             'username': { 'from_secret': 'docker_username' },
           },
-        'when': { 'branch': ['master'], 'event': ['push'] },
+        'when': { 'branch': ['master', 'main'], 'event': ['push'] },
       },
     ],
   'type': 'kubernetes',
