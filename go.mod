@@ -46,7 +46,7 @@ replace (
 	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.18.6
 )
 
-replace k8s.io/kubectl => k8s.io/kubectl v0.18.6
+replace k8s.io/kubectl => k8s.io/kubectl v0.22.2
 
 replace k8s.io/sample-cli-plugin => k8s.io/sample-cli-plugin v0.18.6
 
