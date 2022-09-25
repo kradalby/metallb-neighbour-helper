@@ -12,7 +12,7 @@ require (
 	k8s.io/api v0.18.6
 	k8s.io/apimachinery v0.18.6
 	k8s.io/client-go v0.18.6
-	k8s.io/kubernetes v1.18.6
+	k8s.io/kubernetes v1.25.2
 
 )
 
@@ -40,7 +40,7 @@ replace (
 	k8s.io/kube-proxy => k8s.io/kube-proxy v0.18.6
 	k8s.io/kube-scheduler => k8s.io/kube-scheduler v0.18.6
 	k8s.io/kubelet => k8s.io/kubelet v0.18.6
-	k8s.io/kubernetes => k8s.io/kubernetes v1.18.6
+	k8s.io/kubernetes => k8s.io/kubernetes v1.25.2
 	k8s.io/legacy-cloud-providers => k8s.io/legacy-cloud-providers v0.18.6
 	k8s.io/metrics => k8s.io/metrics v0.18.6
 	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.18.6
