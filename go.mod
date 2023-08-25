@@ -21,7 +21,7 @@ replace (
 
 	// Things that kubernetes needs, probably pretty stupid...
 	go.uber.org/atomic => go.uber.org/atomic v0.0.0-20181018215023-8dc6146f7569
-	go.uber.org/multierr => go.uber.org/multierr v0.0.0-20180122172545-ddea229ff1df
+	go.uber.org/multierr => go.uber.org/multierr v0.2.0
 	k8s.io/api => k8s.io/api v0.18.6
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.18.6
 	k8s.io/apimachinery => k8s.io/apimachinery v0.18.7-rc.0
