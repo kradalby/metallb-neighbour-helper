@@ -3,7 +3,7 @@ module github.com/kradalby/metallb-neighbour-helper
 go 1.14
 
 require (
-	github.com/gobuffalo/envy v1.9.0
+	github.com/gobuffalo/envy v1.10.2
 	github.com/googleapis/gnostic v0.3.0 // indirect
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/kradalby/opnsense-go v0.0.0-20210123082920-7015c8e12160
