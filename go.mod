@@ -9,9 +9,9 @@ require (
 	github.com/kradalby/opnsense-go v0.0.0-20210123082920-7015c8e12160
 	github.com/mikioh/ipaddr v0.0.0-20190404000644-d465c8ab6721
 	gopkg.in/yaml.v2 v2.4.0
-	k8s.io/api v0.18.6
-	k8s.io/apimachinery v0.18.6
-	k8s.io/client-go v0.18.6
+	k8s.io/api v0.18.14
+	k8s.io/apimachinery v0.18.14
+	k8s.io/client-go v0.18.14
 	k8s.io/kubernetes v1.18.6
 
 )
@@ -27,7 +27,7 @@ replace (
 	k8s.io/apimachinery => k8s.io/apimachinery v0.18.7-rc.0
 	k8s.io/apiserver => k8s.io/apiserver v0.18.6
 	k8s.io/cli-runtime => k8s.io/cli-runtime v0.18.6
-	k8s.io/client-go => k8s.io/client-go v0.18.6
+	k8s.io/client-go => k8s.io/client-go v0.18.14
 	k8s.io/cloud-provider => k8s.io/cloud-provider v0.18.6
 	k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.18.6
 	k8s.io/code-generator => k8s.io/code-generator v0.18.7-rc.0
