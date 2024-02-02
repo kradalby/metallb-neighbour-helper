@@ -8,7 +8,8 @@ require (
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/kradalby/opnsense-go v0.0.0-20210123082920-7015c8e12160
 	github.com/mikioh/ipaddr v0.0.0-20190404000644-d465c8ab6721
-	gopkg.in/yaml.v2 v2.4.0
+	gopkg.in/yaml.v2 v2.2.8
+	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.18.6
 	k8s.io/apimachinery v0.18.6
 	k8s.io/client-go v0.18.6
