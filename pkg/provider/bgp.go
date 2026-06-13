@@ -64,7 +64,7 @@ func (opn OpnSenseProvider) Add(ip net.IP, as uint32) error {
 	}
 
 	newNeighbour := opnsense.BgpNeighborSet{}
-	newNeighbour.Enabled = "1"
+	newNeighbour.Enabled = opnsense.Bool(true)
 	newNeighbour.Address = ip.String()
 	newNeighbour.Remoteas = asString
 	// newNeighbour.Nexthopself = "0"

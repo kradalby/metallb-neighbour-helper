@@ -56,7 +56,6 @@ type config struct {
 	Providers []providerConfig `yaml:"providers"`
 }
 
-//
 func Parse(bs []byte) ([]provider.BgpProvider, error) {
 	var raw config
 	if err := yaml.UnmarshalStrict(bs, &raw); err != nil {

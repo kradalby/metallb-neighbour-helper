@@ -3,20 +3,17 @@ package main
 import (
 	"context"
 	"flag"
-	"io/ioutil"
 	"log"
-
-	corev1 "k8s.io/api/core/v1"
-
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/watch"
-
-	metallbConfig "github.com/kradalby/metallb-neighbour-helper/pkg/metallbconfig"
+	"os"
 
 	"github.com/gobuffalo/envy"
 	"github.com/kradalby/metallb-neighbour-helper/pkg/config"
 	"github.com/kradalby/metallb-neighbour-helper/pkg/kube"
+	metallbConfig "github.com/kradalby/metallb-neighbour-helper/pkg/metallbconfig"
 	"github.com/kradalby/metallb-neighbour-helper/pkg/provider"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/watch"
 	utilnode "k8s.io/kubernetes/pkg/util/node"
 )
 
@@ -42,7 +39,7 @@ func main() {
 
 	var namespace string
 
-	namespaceFile, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
+	namespaceFile, err := os.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
 	if err != nil {
 		log.Printf("[INFO] Could not detect namespace, using from cli or default")
 
@@ -203,7 +200,8 @@ func addNode(node corev1.Node, asNumberMap map[provider.BgpProvider][]uint32, pr
 func deleteNode(
 	node *corev1.Node,
 	asNumberMap map[provider.BgpProvider][]uint32,
-	providers []provider.BgpProvider) error {
+	providers []provider.BgpProvider,
+) error {
 	ip, err := utilnode.GetNodeHostIP(node)
 	if err != nil {
 		log.Printf("[ERROR] Could not get IP of node %s, error: %s", node.Name, err)
@@ -235,7 +233,8 @@ func deleteNode(
 
 func pairProvidersAndASNumbers(
 	providers []provider.BgpProvider,
-	peers []*metallbConfig.Peer) map[provider.BgpProvider][]uint32 {
+	peers []*metallbConfig.Peer,
+) map[provider.BgpProvider][]uint32 {
 	pairs := make(map[provider.BgpProvider][]uint32)
 
 	for _, provider := range providers {
