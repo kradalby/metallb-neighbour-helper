@@ -3,7 +3,7 @@ module github.com/kradalby/metallb-neighbour-helper
 go 1.23
 
 require (
-	github.com/gobuffalo/envy v1.9.0
+	github.com/gobuffalo/envy v1.10.2
 	github.com/kradalby/opnsense-go v0.0.0-20210123082920-7015c8e12160
 	github.com/mikioh/ipaddr v0.0.0-20190404000644-d465c8ab6721
 	gopkg.in/yaml.v2 v2.4.0
@@ -20,11 +20,11 @@ require (
 	github.com/google/gofuzz v1.1.0 // indirect
 	github.com/googleapis/gnostic v0.3.0 // indirect
 	github.com/imdario/mergo v0.3.7 // indirect
-	github.com/joho/godotenv v1.3.0 // indirect
+	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/json-iterator/go v1.1.8 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
-	github.com/rogpeppe/go-internal v1.5.1 // indirect
+	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/crypto v0.0.0-20200220183623-bac4c82f6975 // indirect
